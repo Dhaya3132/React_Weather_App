@@ -65,6 +65,8 @@ function App() {
   const [wind, setWind] = useState(0);
   const [humidity, setHumidity] = useState(0);
 
+  const [errors, seterror] = useState();
+
   const [loading, setloading] = useState(false);
   const [cityNotFound, setCityNotFount] = useState(false);
 
@@ -115,6 +117,7 @@ function App() {
     }
     catch (error) {
       console.log("An error occured", error.message);
+      seterror('failed to fetch data');
     }
     finally {
       setloading(false);
@@ -132,9 +135,9 @@ function App() {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     search();
-  },[])
+  }, [])
   return (
     <>
       <div className="container">
@@ -146,10 +149,14 @@ function App() {
           </div>
         </div>
 
-        <WeatherDetails icons={icons} temp={temp} city={city} country={country} lat={lat} long={long}
+        {loading && <div className='Loading_Message'>Loading...</div>}
+        {errors && <div className='error_message'>{errors}</div>}
+        {cityNotFound && <div className='city_not_fount'>City Not Found</div>}
+
+        {!loading && !cityNotFound && <WeatherDetails icons={icons} temp={temp} city={city} country={country} lat={lat} long={long}
           humidity={humidity} wind={wind}
         />
-
+        }
 
       </div>
     </>
